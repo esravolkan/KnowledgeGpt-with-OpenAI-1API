@@ -1,5 +1,6 @@
-from knowledge_gpt.core.parsing import File
 from io import BytesIO
+
+from knowledge_gpt.core.parsing import File
 
 
 class FakeFile(File):

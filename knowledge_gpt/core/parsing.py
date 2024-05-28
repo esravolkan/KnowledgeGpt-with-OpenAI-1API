@@ -1,14 +1,13 @@
-from io import BytesIO
-from typing import List, Any, Optional
 import re
+from abc import ABC, abstractmethod
+from copy import deepcopy
+from hashlib import md5
+from io import BytesIO
+from typing import Any, List, Optional
 
 import docx2txt
-from langchain.docstore.document import Document
 import fitz
-from hashlib import md5
-
-from abc import abstractmethod, ABC
-from copy import deepcopy
+from langchain.docstore.document import Document
 
 
 class File(ABC):

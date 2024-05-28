@@ -1,10 +1,10 @@
-from langchain.vectorstores import VectorStore
-from typing import Iterable, List, Any
+from typing import Any, Iterable, List, Optional
+
+from langchain.chat_models.fake import FakeListChatModel
 from langchain.docstore.document import Document
 from langchain.embeddings.base import Embeddings
 from langchain.embeddings.fake import FakeEmbeddings as FakeEmbeddingsBase
-from langchain.chat_models.fake import FakeListChatModel
-from typing import Optional
+from langchain.vectorstores import VectorStore
 
 
 class FakeChatModel(FakeListChatModel):

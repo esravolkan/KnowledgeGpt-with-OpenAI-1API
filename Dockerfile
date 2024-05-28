@@ -2,7 +2,7 @@
 FROM python:3.10-slim as builder
 
 ENV PYTHONFAULTHANDLER=1 \
-    PYTHONUNBUFFERED=1 \ 
+    PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     POETRY_VERSION=1.5.1 \
     PIP_NO_CACHE_DIR=1
@@ -27,7 +27,7 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 
-COPY /knowledge_gpt ./knowledge_gpt 
+COPY /knowledge_gpt ./knowledge_gpt
 
 ENV PATH="/app/.venv/bin:$PATH"
 

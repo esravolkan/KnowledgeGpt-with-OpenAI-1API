@@ -1,5 +1,8 @@
-import pytest
 from io import BytesIO
+from pathlib import Path
+
+import pytest
+from langchain.docstore.document import Document
 
 from knowledge_gpt.core.parsing import (
     DocxFile,
@@ -8,11 +11,8 @@ from knowledge_gpt.core.parsing import (
     read_file,
     strip_consecutive_newlines,
 )
-from pathlib import Path
 
 from .fake_file import FakeFile
-from langchain.docstore.document import Document
-
 
 UNIT_TESTS_ROOT = Path(__file__).parent.resolve()
 TESTS_ROOT = UNIT_TESTS_ROOT.parent.resolve()

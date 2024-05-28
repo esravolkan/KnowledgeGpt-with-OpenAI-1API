@@ -7,8 +7,8 @@ def faq():
         """
 # FAQ
 ## How does KnowledgeGPT work?
-When you upload a document, it will be divided into smaller chunks 
-and stored in a special type of database called a vector index 
+When you upload a document, it will be divided into smaller chunks
+and stored in a special type of database called a vector index
 that allows for semantic search and retrieval.
 
 When you ask a question, KnowledgeGPT will search through the
@@ -25,14 +25,14 @@ your document. This is because the free API key has strict [rate limits](https:/
 To speed up the indexing process, you can use a paid API key.
 
 ## What do the numbers mean under each source?
-For a PDF document, you will see a citation number like this: 3-12. 
-The first number is the page number and the second number is 
-the chunk number on that page. For DOCS and TXT documents, 
+For a PDF document, you will see a citation number like this: 3-12.
+The first number is the page number and the second number is
+the chunk number on that page. For DOCS and TXT documents,
 the first number is set to 1 and the second number is the chunk number.
 
 ## Are the answers 100% accurate?
 No, the answers are not 100% accurate. KnowledgeGPT uses GPT-3 to generate
-answers. GPT-3 is a powerful language model, but it sometimes makes mistakes 
+answers. GPT-3 is a powerful language model, but it sometimes makes mistakes
 and is prone to hallucinations. Also, KnowledgeGPT uses semantic search
 to find the most relevant chunks and does not see the entire document,
 which means that it may not be able to find all the relevant information and

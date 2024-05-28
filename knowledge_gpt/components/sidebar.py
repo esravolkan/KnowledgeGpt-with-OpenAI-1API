@@ -1,8 +1,7 @@
-import streamlit as st
-
-from knowledge_gpt.components.faq import faq
-from dotenv import load_dotenv
 import os
+
+import streamlit as st
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -18,7 +17,7 @@ def request_openai_info():
         placeholder="Paste your OpenAI API key here (sk-...)",
         help="You can get your API key from https://platform.openai.com/account/api-keys.",  # noqa: E501
         value=os.environ.get("OPENAI_API_KEY", None)
-              or st.session_state.get("llm_kwargs", {}).get("openai_api_key"),
+        or st.session_state.get("llm_kwargs", {}).get("openai_api_key"),
     )
 
     # ask for base url
@@ -27,7 +26,7 @@ def request_openai_info():
         placeholder="",
         help="Base URL for OpenAI endpoint. Set to proxy if applicable.",  # noqa: E501
         value=os.environ.get("OPENAI_API_BASE", None)
-              or st.session_state.get("llm_kwargs", {}).get("openai_api_base", None)
+        or st.session_state.get("llm_kwargs", {}).get("openai_api_base", None),
     )
     if not openai_api_base or openai_api_base.lower() == "none":
         openai_api_base = None
@@ -40,7 +39,7 @@ def request_openai_info():
     # set the llm kwargs in the session state
     st.session_state["llm_kwargs"] = {
         "openai_api_key": openai_api_key,
-        "openai_api_base": openai_api_base
+        "openai_api_base": openai_api_base,
     }
 
 
@@ -49,7 +48,7 @@ def select_llm():
         "LLM Model",
         options=SUPPORTED_LLMS,
         format_func=lambda x: x.replace("_", " ").title(),
-        key="llm"
+        key="llm",
     )
     return llm
 

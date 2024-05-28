@@ -1,15 +1,20 @@
-from langchain.vectorstores import VectorStore
-from knowledge_gpt.core.parsing import File
-from langchain.vectorstores.faiss import FAISS
+from typing import List, Type
+
+from langchain.docstore.document import Document
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.embeddings.base import Embeddings
-from typing import List, Type
-from langchain.docstore.document import Document
-from knowledge_gpt.core.debug import FakeVectorStore, FakeEmbeddings
+from langchain.vectorstores import VectorStore
+from langchain.vectorstores.faiss import FAISS
+
+from knowledge_gpt.core.parsing import File
 
 
-def build_openai_embedding(*, openai_api_key: str, openai_api_base: str | None = None, **_) -> OpenAIEmbeddings:
-    return OpenAIEmbeddings(openai_api_key=openai_api_key, openai_api_base=openai_api_base)
+def build_openai_embedding(
+    *, openai_api_key: str, openai_api_base: str | None = None, **_
+) -> OpenAIEmbeddings:
+    return OpenAIEmbeddings(
+        openai_api_key=openai_api_key, openai_api_base=openai_api_base
+    )
 
 
 def embeddings_factory(llm: str, **kwargs):
@@ -17,7 +22,6 @@ def embeddings_factory(llm: str, **kwargs):
         return build_openai_embedding(**kwargs)
     else:
         raise ValueError(f"Unknown llm input: {llm}")
-
 
 
 class FolderIndex:
@@ -58,7 +62,10 @@ class FolderIndex:
 
 
 def embed_files(
-    files: List[File], embedding: str, vector_store: Type[VectorStore] = FAISS, **embeddings_kwargs
+    files: List[File],
+    embedding: str,
+    vector_store: Type[VectorStore] = FAISS,
+    **embeddings_kwargs,
 ) -> FolderIndex:
     """Embeds a collection of files and stores them in a FolderIndex."""
     # build an embedding

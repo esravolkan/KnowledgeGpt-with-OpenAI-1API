@@ -1,9 +1,9 @@
 import streamlit as st
 from streamlit.runtime.caching.hashing import HashFuncsDict
 
-import knowledge_gpt.core.parsing as parsing
 import knowledge_gpt.core.chunking as chunking
 import knowledge_gpt.core.embedding as embedding
+import knowledge_gpt.core.parsing as parsing
 from knowledge_gpt.core.parsing import File
 
 

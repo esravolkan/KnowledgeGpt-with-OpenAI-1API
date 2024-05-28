@@ -1,10 +1,11 @@
-from typing import List
+from typing import List, NoReturn
+
+import openai
 import streamlit as st
 from langchain.docstore.document import Document
-from knowledge_gpt.core.parsing import File
-import openai
 from streamlit.logger import get_logger
-from typing import NoReturn
+
+from knowledge_gpt.core.parsing import File
 
 logger = get_logger(__name__)
 
@@ -12,10 +13,9 @@ logger = get_logger(__name__)
 def wrap_doc_in_html(docs: List[Document]) -> str:
     """Wraps each page in document separated by newlines in <p> tags"""
     text = [doc.page_content for doc in docs]
-    if isinstance(text, list):
-        # Add horizontal rules between pages
-        text = "\n<hr/>\n".join(text)
-    return "".join([f"<p>{line}</p>" for line in text.split("\n")])
+    # Add horizontal rules between pages
+    text_str = "\n<hr/>\n".join(text)
+    return "".join([f"<p>{line}</p>" for line in text_str.split("\n")])
 
 
 def is_query_valid(query: str) -> bool:
@@ -36,8 +36,8 @@ def is_file_valid(file: File) -> bool:
     return True
 
 
-def display_file_read_error(e: Exception, file_name: str) -> NoReturn:
-    st.error("Error reading file. Make sure the file is not corrupted or encrypted")
+def display_file_read_error(e: Exception, file_name: str) -> NoReturn:  # type: ignore
+    st.error("Error reading file. Make sure the file is not corrupted or encrypted")  # type: ignore
     logger.error(f"{e.__class__.__name__}: {e}. Extension: {file_name.split('.')[-1]}")
     st.stop()
 
