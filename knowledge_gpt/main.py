@@ -1,6 +1,7 @@
 import streamlit as st
 
 from knowledge_gpt.components.sidebar import sidebar
+from knowledge_gpt.core.llms import build_llm
 
 from knowledge_gpt.ui import (
     wrap_doc_in_html,
@@ -16,15 +17,7 @@ from knowledge_gpt.core.parsing import read_file
 from knowledge_gpt.core.chunking import chunk_file
 from knowledge_gpt.core.embedding import embed_files
 from knowledge_gpt.core.qa import query_folder
-from knowledge_gpt.core.utils import get_llm
 
-
-EMBEDDING = "openai"
-VECTOR_STORE = "faiss"
-MODEL_LIST = ["gpt-3.5-turbo", "gpt-4"]
-
-# Uncomment to enable debug mode
-# MODEL_LIST.insert(0, "debug")
 
 st.set_page_config(page_title="KnowledgeGPT", page_icon="📖", layout="wide")
 st.header("📖KnowledgeGPT")
@@ -32,16 +25,8 @@ st.header("📖KnowledgeGPT")
 # Enable caching for expensive functions
 bootstrap_caching()
 
+# request from user to select llm, and enter necessary information for llm. Will stop if missing information
 sidebar()
-
-openai_api_key = st.session_state.get("OPENAI_API_KEY")
-
-
-if not openai_api_key:
-    st.warning(
-        "Enter your OpenAI API key in the sidebar. You can get a key at"
-        " https://platform.openai.com/account/api-keys."
-    )
 
 
 uploaded_file = st.file_uploader(
@@ -50,7 +35,6 @@ uploaded_file = st.file_uploader(
     help="Scanned documents are not supported yet!",
 )
 
-model: str = st.selectbox("Model", options=MODEL_LIST)  # type: ignore
 
 with st.expander("Advanced Options"):
     return_all_chunks = st.checkbox("Show all chunks retrieved from vector search")
@@ -71,16 +55,12 @@ if not is_file_valid(file):
     st.stop()
 
 
-if not is_open_ai_key_valid(openai_api_key, model):
-    st.stop()
-
-
 with st.spinner("Indexing document... This may take a while⏳"):
     folder_index = embed_files(
         files=[chunked_file],
-        embedding=EMBEDDING if model != "debug" else "debug",
-        vector_store=VECTOR_STORE if model != "debug" else "debug",
-        openai_api_key=openai_api_key,
+        embedding=st.session_state.get("llm"),
+        # information needed to create llm
+        **st.session_state.get("llm_kwargs"),
     )
 
 with st.form(key="qa_form"):
@@ -101,7 +81,10 @@ if submit:
     # Output Columns
     answer_col, sources_col = st.columns(2)
 
-    llm = get_llm(model=model, openai_api_key=openai_api_key, temperature=0)
+    llm = build_llm(
+        llm=st.session_state["llm"],
+        **st.session_state.get("llm_kwargs"),
+    )
     result = query_folder(
         folder_index=folder_index,
         query=query,

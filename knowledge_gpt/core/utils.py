@@ -20,13 +20,3 @@ def pop_docs_upto_limit(
         token_count = chain.prompt_length(docs, question=query)  # type: ignore
 
     return docs
-
-
-def get_llm(model: str, **kwargs) -> BaseChatModel:
-    if model == "debug":
-        return FakeChatModel()
-
-    if "gpt" in model:
-        return ChatOpenAI(model=model, **kwargs)  # type: ignore
-
-    raise NotImplementedError(f"Model {model} not supported!")

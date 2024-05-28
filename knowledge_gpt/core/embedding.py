@@ -8,6 +8,18 @@ from langchain.docstore.document import Document
 from knowledge_gpt.core.debug import FakeVectorStore, FakeEmbeddings
 
 
+def build_openai_embedding(*, openai_api_key: str, openai_api_base: str | None = None, **_) -> OpenAIEmbeddings:
+    return OpenAIEmbeddings(openai_api_key=openai_api_key, openai_api_base=openai_api_base)
+
+
+def embeddings_factory(llm: str, **kwargs):
+    if llm == "openai":
+        return build_openai_embedding(**kwargs)
+    else:
+        raise ValueError(f"Unknown llm input: {llm}")
+
+
+
 class FolderIndex:
     """Index for a collection of files (a folder)"""
 
@@ -46,29 +58,12 @@ class FolderIndex:
 
 
 def embed_files(
-    files: List[File], embedding: str, vector_store: str, **kwargs
+    files: List[File], embedding: str, vector_store: Type[VectorStore] = FAISS, **embeddings_kwargs
 ) -> FolderIndex:
     """Embeds a collection of files and stores them in a FolderIndex."""
-
-    supported_embeddings: dict[str, Type[Embeddings]] = {
-        "openai": OpenAIEmbeddings,
-        "debug": FakeEmbeddings,
-    }
-    supported_vector_stores: dict[str, Type[VectorStore]] = {
-        "faiss": FAISS,
-        "debug": FakeVectorStore,
-    }
-
-    if embedding in supported_embeddings:
-        _embeddings = supported_embeddings[embedding](**kwargs)
-    else:
-        raise NotImplementedError(f"Embedding {embedding} not supported.")
-
-    if vector_store in supported_vector_stores:
-        _vector_store = supported_vector_stores[vector_store]
-    else:
-        raise NotImplementedError(f"Vector store {vector_store} not supported.")
+    # build an embedding
+    embedding = embeddings_factory(embedding, **embeddings_kwargs)
 
     return FolderIndex.from_files(
-        files=files, embeddings=_embeddings, vector_store=_vector_store
+        files=files, embeddings=embedding, vector_store=vector_store
     )

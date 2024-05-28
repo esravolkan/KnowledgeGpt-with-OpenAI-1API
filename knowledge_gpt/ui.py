@@ -44,9 +44,6 @@ def display_file_read_error(e: Exception, file_name: str) -> NoReturn:
 
 @st.cache_data(show_spinner=False)
 def is_open_ai_key_valid(openai_api_key, model: str) -> bool:
-    if model == "debug":
-        return True
-
     if not openai_api_key:
         st.error("Please enter your OpenAI API key in the sidebar!")
         return False
