@@ -5,8 +5,8 @@ from langchain.chat_models.base import BaseChatModel
 from langchain.docstore.document import Document
 from pydantic import BaseModel
 
-from knowledge_gpt.core.embedding import FolderIndex
-from knowledge_gpt.core.prompts import STUFF_PROMPT
+from app.core.embedding import FolderIndex
+from app.core.prompts import STUFF_PROMPT
 
 
 class AnswerWithSources(BaseModel):

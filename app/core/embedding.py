@@ -6,7 +6,7 @@ from langchain.embeddings.base import Embeddings
 from langchain.vectorstores import VectorStore
 from langchain.vectorstores.faiss import FAISS
 
-from knowledge_gpt.core.parsing import File
+from app.core.parsing import File
 
 
 def build_openai_embedding(

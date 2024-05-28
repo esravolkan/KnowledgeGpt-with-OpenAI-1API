@@ -3,8 +3,8 @@ from typing import List
 from langchain.docstore.document import Document
 from langchain.vectorstores import VectorStore
 
-from knowledge_gpt.core.embedding import FolderIndex, embed_files
-from knowledge_gpt.core.parsing import File
+from app.core.embedding import FolderIndex, embed_files
+from app.core.parsing import File
 
 from .fake_file import FakeFile
 

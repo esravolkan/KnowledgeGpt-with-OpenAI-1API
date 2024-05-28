@@ -1,21 +1,21 @@
 import streamlit as st
 
-from knowledge_gpt.components.sidebar import sidebar
-from knowledge_gpt.core.caching import bootstrap_caching
-from knowledge_gpt.core.chunking import chunk_file
-from knowledge_gpt.core.embedding import embed_files
-from knowledge_gpt.core.llms import build_llm
-from knowledge_gpt.core.parsing import read_file
-from knowledge_gpt.core.qa import query_folder
-from knowledge_gpt.ui import (
+from app.components.sidebar import sidebar
+from app.core.caching import bootstrap_caching
+from app.core.chunking import chunk_file
+from app.core.embedding import embed_files
+from app.core.llms import build_llm
+from app.core.parsing import read_file
+from app.core.qa import query_folder
+from app.ui import (
     display_file_read_error,
     is_file_valid,
     is_query_valid,
     wrap_doc_in_html,
 )
 
-st.set_page_config(page_title="KnowledgeGPT", page_icon="📖", layout="wide")
-st.header("📖KnowledgeGPT")
+st.set_page_config(page_title="Chat With Documents", page_icon="📖", layout="wide")
+st.header("📖Chat With Documents")
 
 # Enable caching for expensive functions
 bootstrap_caching()

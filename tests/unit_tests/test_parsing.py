@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from langchain.docstore.document import Document
 
-from knowledge_gpt.core.parsing import (
+from app.core.parsing import (
     DocxFile,
     PdfFile,
     TxtFile,

@@ -5,7 +5,7 @@ import streamlit as st
 from langchain.docstore.document import Document
 from streamlit.logger import get_logger
 
-from knowledge_gpt.core.parsing import File
+from app.core.parsing import File
 
 logger = get_logger(__name__)
 

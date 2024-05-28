@@ -1,5 +1,5 @@
 <h1 align="center">
-📖KnowledgeGPT
+📖Chat With Documents
 </h1>
 
 **Accurate answers and instant citations for your documents.**
@@ -32,18 +32,19 @@ See `.env.example` for how the file should look like.
 4. Run the Streamlit server
 
 ```bash
-cd knowledge_gpt
+cd app
 streamlit run main.py
 ```
 
 ## Build with Docker
 
+⚠️ **Under construction** ⚠️
+
 Run the following commands to build and run the Docker image.
 
 ```bash
-cd knowledge_gpt
-docker build -t knowledge_gpt .
-docker run -p 8501:8501 knowledge_gpt
+docker build -t app .
+docker run -p 8501:8501 app
 ```
 
 Open http://localhost:8501 in your browser to access the app.

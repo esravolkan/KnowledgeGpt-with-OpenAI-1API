@@ -2,10 +2,10 @@ from typing import List
 
 from langchain.docstore.document import Document
 
-from knowledge_gpt.core.debug import FakeVectorStore
-from knowledge_gpt.core.embedding import FolderIndex
-from knowledge_gpt.core.parsing import File
-from knowledge_gpt.core.qa import get_sources
+from app.core.debug import FakeVectorStore
+from app.core.embedding import FolderIndex
+from app.core.parsing import File
+from app.core.qa import get_sources
 
 from .fake_file import FakeFile
 
