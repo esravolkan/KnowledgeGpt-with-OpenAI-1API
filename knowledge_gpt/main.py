@@ -2,7 +2,7 @@ import streamlit as st
 
 from knowledge_gpt.components.sidebar import sidebar
 
-from knowledge_gpt.ui import (
+from ui import (
     wrap_doc_in_html,
     is_query_valid,
     is_file_valid,
@@ -26,8 +26,8 @@ MODEL_LIST = ["gpt-3.5-turbo", "gpt-4"]
 # Uncomment to enable debug mode
 # MODEL_LIST.insert(0, "debug")
 
-st.set_page_config(page_title="KnowledgeGPT", page_icon="📖", layout="wide")
-st.header("📖KnowledgeGPT")
+st.set_page_config(page_title="RAG_Proto", page_icon="📖", layout="wide")
+st.header("📖RAG_Prototype")
 
 # Enable caching for expensive functions
 bootstrap_caching()
@@ -39,22 +39,22 @@ openai_api_key = st.session_state.get("OPENAI_API_KEY")
 
 if not openai_api_key:
     st.warning(
-        "Enter your OpenAI API key in the sidebar. You can get a key at"
+        "Введите свой OpenAI API-ключ на боковой панели. Вы можете получить его тут:"
         " https://platform.openai.com/account/api-keys."
     )
 
 
 uploaded_file = st.file_uploader(
-    "Upload a pdf, docx, or txt file",
+    "Загрузите pdf, docx, или txt файл",
     type=["pdf", "docx", "txt"],
-    help="Scanned documents are not supported yet!",
+    help="Сканированные документы не поддерживаются!",
 )
 
-model: str = st.selectbox("Model", options=MODEL_LIST)  # type: ignore
+model: str = st.selectbox("Модель", options=MODEL_LIST)  # type: ignore
 
-with st.expander("Advanced Options"):
-    return_all_chunks = st.checkbox("Show all chunks retrieved from vector search")
-    show_full_doc = st.checkbox("Show parsed contents of the document")
+with st.expander("Расширенные опции"):
+    return_all_chunks = st.checkbox("Показвать все текстовые блоки, извлеченные векторным поиском")
+    show_full_doc = st.checkbox("Показать извлеченное содержимое документа")
 
 
 if not uploaded_file:
@@ -75,7 +75,7 @@ if not is_open_ai_key_valid(openai_api_key, model):
     st.stop()
 
 
-with st.spinner("Indexing document... This may take a while⏳"):
+with st.spinner("Индексация документа... Это может занять некоторое время⏳"):
     folder_index = embed_files(
         files=[chunked_file],
         embedding=EMBEDDING if model != "debug" else "debug",
@@ -84,8 +84,8 @@ with st.spinner("Indexing document... This may take a while⏳"):
     )
 
 with st.form(key="qa_form"):
-    query = st.text_area("Ask a question about the document")
-    submit = st.form_submit_button("Submit")
+    query = st.text_area("Задайте вопрос по документу")
+    submit = st.form_submit_button("Отправить")
 
 
 if show_full_doc:
@@ -110,11 +110,11 @@ if submit:
     )
 
     with answer_col:
-        st.markdown("#### Answer")
+        st.markdown("#### Ответ")
         st.markdown(result.answer)
 
     with sources_col:
-        st.markdown("#### Sources")
+        st.markdown("#### Источники")
         for source in result.sources:
             st.markdown(source.page_content)
             st.markdown(source.metadata["source"])
