@@ -61,7 +61,8 @@ Run the following commands to build and run the Docker image.
 ```bash
 cd knowledge_gpt
 docker build -t knowledge_gpt .
-docker run -p 8501:8501 knowledge_gpt
+docker run -p 8501:8501 knowledge_gpt --name knowledge_gpt
+docker stop knowledge_gpt
 ```
 
 Open http://localhost:8501 in your browser to access the app.
