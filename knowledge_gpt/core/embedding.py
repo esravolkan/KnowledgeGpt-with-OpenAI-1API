@@ -1,11 +1,11 @@
 from langchain.vectorstores import VectorStore
-from clinicalknowledge_gpt.core.parsing import File
+from knowledge_gpt.core.parsing import File
 from langchain.vectorstores.faiss import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.embeddings.base import Embeddings
 from typing import List, Type
 from langchain.docstore.document import Document
-from clinicalknowledge_gpt.core.debug import FakeVectorStore, FakeEmbeddings
+from knowledge_gpt.core.debug import FakeVectorStore, FakeEmbeddings
 
 
 class FolderIndex:

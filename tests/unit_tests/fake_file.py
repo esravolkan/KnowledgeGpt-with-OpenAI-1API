@@ -1,4 +1,4 @@
-from clinicalknowledge_gpt.core.parsing import File
+from knowledge_gpt.core.parsing import File
 from io import BytesIO
 
 

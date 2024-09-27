@@ -1,7 +1,7 @@
 import pytest
 from langchain.docstore.document import Document
 
-from clinicalknowledge_gpt.core.chunking import chunk_file
+from knowledge_gpt.core.chunking import chunk_file
 from .fake_file import FakeFile
 
 

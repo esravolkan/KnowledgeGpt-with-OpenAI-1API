@@ -1,7 +1,7 @@
 import pytest
 from io import BytesIO
 
-from clinicalknowledge_gpt.core.parsing import (
+from knowledge_gpt.core.parsing import (
     DocxFile,
     PdfFile,
     TxtFile,

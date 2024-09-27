@@ -1,6 +1,6 @@
 import streamlit as st
 
-from clinicalknowledge_gpt.components.faq import faq
+from knowledge_gpt.components.faq import faq
 from dotenv import load_dotenv
 import os
 

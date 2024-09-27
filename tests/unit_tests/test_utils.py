@@ -1,8 +1,8 @@
-from clinicalknowledge_gpt.core.utils import pop_docs_upto_limit
+from knowledge_gpt.core.utils import pop_docs_upto_limit
 from langchain.docstore.document import Document
-from clinicalknowledge_gpt.core.debug import FakeChatModel
+from knowledge_gpt.core.debug import FakeChatModel
 from langchain.chains.qa_with_sources.loading import _load_stuff_chain
-from clinicalknowledge_gpt.core.prompts import STUFF_PROMPT
+from knowledge_gpt.core.prompts import STUFF_PROMPT
 
 
 def test_single_doc_popped():
