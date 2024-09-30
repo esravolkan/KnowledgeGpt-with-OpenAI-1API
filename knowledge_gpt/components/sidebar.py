@@ -26,7 +26,7 @@ def sidebar():
 
         st.session_state["OPENAI_API_KEY"] = api_key_input
 
-        st.markdown("---")
+        """st.markdown("---")
         st.markdown("# About")
         st.markdown(
             "📖KnowledgeGPT allows you to ask questions about your "
@@ -35,3 +35,4 @@ def sidebar():
         st.markdown("---")
 
         faq()
+        """
