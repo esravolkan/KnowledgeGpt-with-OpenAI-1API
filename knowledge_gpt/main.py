@@ -21,7 +21,7 @@ from knowledge_gpt.core.utils import get_llm
 
 EMBEDDING = "openai"
 VECTOR_STORE = "faiss"
-MODEL_LIST = ["gpt-3.5-turbo", "gpt-4"]
+MODEL_LIST = ["gpt-4o"]
 
 # Uncomment to enable debug mode
 # MODEL_LIST.insert(0, "debug")
@@ -50,7 +50,9 @@ uploaded_file = st.file_uploader(
     help="Scanned documents are not supported yet!",
 )
 
-model: str = st.selectbox("Model", options=MODEL_LIST)  # type: ignore
+st.markdown("Model: gpt-4o")
+model: str = MODEL_LIST[0]
+#st.selectbox("Model", options=MODEL_LIST)  # type: ignore
 
 with st.expander("Advanced Options"):
     return_all_chunks = st.checkbox("Show all chunks retrieved from vector search")
