@@ -1,11 +1,10 @@
 from langchain.vectorstores import VectorStore
-from knowledge_gpt.core.parsing import File
-from langchain.vectorstores.faiss import FAISS
-from langchain.embeddings import OpenAIEmbeddings
+from rag_mvp.core.parsing import File
+from langchain_community.vectorstores import FAISS
+from rag_mvp.core.embedder import MultilingualE5
 from langchain.embeddings.base import Embeddings
 from typing import List, Type
 from langchain.docstore.document import Document
-from knowledge_gpt.core.debug import FakeVectorStore, FakeEmbeddings
 
 
 class FolderIndex:
@@ -50,17 +49,15 @@ def embed_files(
 ) -> FolderIndex:
     """Embeds a collection of files and stores them in a FolderIndex."""
 
-    supported_embeddings: dict[str, Type[Embeddings]] = {
-        "openai": OpenAIEmbeddings,
-        "debug": FakeEmbeddings,
+    supported_embeddings = {
+        "openai": MultilingualE5,
     }
     supported_vector_stores: dict[str, Type[VectorStore]] = {
         "faiss": FAISS,
-        "debug": FakeVectorStore,
     }
 
     if embedding in supported_embeddings:
-        _embeddings = supported_embeddings[embedding](**kwargs)
+        _embeddings = supported_embeddings[embedding]()
     else:
         raise NotImplementedError(f"Embedding {embedding} not supported.")
 

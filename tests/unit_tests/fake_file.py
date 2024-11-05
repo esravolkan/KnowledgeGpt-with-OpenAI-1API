@@ -1,4 +1,4 @@
-from knowledge_gpt.core.parsing import File
+from rag_mvp.core.parsing import File
 from io import BytesIO
 
 

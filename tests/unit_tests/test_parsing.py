@@ -1,7 +1,7 @@
 import pytest
 from io import BytesIO
 
-from knowledge_gpt.core.parsing import (
+from rag_mvp.core.parsing import (
     DocxFile,
     PdfFile,
     TxtFile,

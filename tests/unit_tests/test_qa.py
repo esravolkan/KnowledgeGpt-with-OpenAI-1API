@@ -1,12 +1,12 @@
 from langchain.docstore.document import Document
-from knowledge_gpt.core.qa import get_sources
-from knowledge_gpt.core.embedding import FolderIndex
+from rag_mvp.core.qa import get_sources
+from rag_mvp.core.embedding import FolderIndex
 
 from typing import List
 from .fake_file import FakeFile
-from knowledge_gpt.core.parsing import File
+from rag_mvp.core.parsing import File
 
-from knowledge_gpt.core.debug import FakeVectorStore
+from rag_mvp.core.debug import FakeVectorStore
 
 
 def test_getting_sources_from_answer():

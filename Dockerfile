@@ -27,7 +27,7 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 
-COPY /knowledge_gpt ./knowledge_gpt 
+COPY /rag_mvp ./knowledge_gpt
 
 ENV PATH="/app/.venv/bin:$PATH"
 

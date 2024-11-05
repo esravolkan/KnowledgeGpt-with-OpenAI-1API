@@ -31,7 +31,7 @@ Make sure you have Python ≥3.10 installed.
 
 ```bash
 git clone https://github.com/mmz-001/knowledge_gpt
-cd knowledge_gpt
+cd rag_mvp
 ```
 
 2. Install dependencies with [Poetry](https://python-poetry.org/) and activate virtual environment
@@ -50,7 +50,7 @@ poetry shell
 4. Run the Streamlit server
 
 ```bash
-cd knowledge_gpt
+cd rag_mvp
 streamlit run main.py
 ```
 
@@ -59,9 +59,9 @@ streamlit run main.py
 Run the following commands to build and run the Docker image.
 
 ```bash
-cd knowledge_gpt
-docker build -t knowledge_gpt .
-docker run -p 8501:8501 knowledge_gpt
+cd rag_mvp
+docker build -t rag_mvp .
+docker run -p 8501:8501 rag_mvp
 ```
 
 Open http://localhost:8501 in your browser to access the app.

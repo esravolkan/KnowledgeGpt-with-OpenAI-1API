@@ -2,8 +2,7 @@ from typing import List
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.docstore.document import Document
 
-from langchain.chat_models import ChatOpenAI
-from knowledge_gpt.core.debug import FakeChatModel
+from langchain_mistralai import ChatMistralAI
 from langchain.chat_models.base import BaseChatModel
 
 
@@ -23,10 +22,8 @@ def pop_docs_upto_limit(
 
 
 def get_llm(model: str, **kwargs) -> BaseChatModel:
-    if model == "debug":
-        return FakeChatModel()
 
-    if "gpt" in model:
-        return ChatOpenAI(model=model, **kwargs)  # type: ignore
+    if "mistral" in model:
+        return ChatMistralAI(model=model, **kwargs)  # type: ignore
 
     raise NotImplementedError(f"Model {model} not supported!")

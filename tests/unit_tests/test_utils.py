@@ -1,8 +1,8 @@
-from knowledge_gpt.core.utils import pop_docs_upto_limit
+from rag_mvp.core.utils import pop_docs_upto_limit
 from langchain.docstore.document import Document
-from knowledge_gpt.core.debug import FakeChatModel
+from rag_mvp.core.debug import FakeChatModel
 from langchain.chains.qa_with_sources.loading import _load_stuff_chain
-from knowledge_gpt.core.prompts import STUFF_PROMPT
+from rag_mvp.core.prompts import STUFF_PROMPT
 
 
 def test_single_doc_popped():
