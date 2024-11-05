@@ -1,4 +1,3 @@
-# flake8: noqa
 import streamlit as st
 
 
@@ -6,23 +5,20 @@ def faq():
     st.markdown(
         """
 # FAQ
-## How does KnowledgeGPT work?
-When you upload a document, it will be divided into smaller chunks 
-and stored in a special type of database called a vector index 
-that allows for semantic search and retrieval.
+## Как работает умный поиск?
+Умный поиск разбивает исходный текст на небольшие фрагменты и при помощи 
+специальной модели ИИ ищет наиболее подходящие фрагменты для ответа на вопрос.
+Затем генеративная модель ИИ генерирует ответ на основе этих фрагментов.
 
-When you ask a question, KnowledgeGPT will search through the
-document chunks and find the most relevant ones using the vector index.
-Then, it will use GPT3 to generate a final answer.
+## В безопасности ли мои данные?
+Да, ваша конфиденциальность очень важна для нас. 
+Мы храним документы только на время текущей сессии и не используем их для других целей, кроме поиска ответов на ваши вопросы.
+Все загруженные документы удаляются после закрытия вкладки браузера.
 
-## Is my data safe?
-Yes, your data is safe. KnowledgeGPT does not store your documents or
-questions. All uploaded data is deleted after you close the browser tab.
-
-## Why does it take so long to index my document?
-If you are using a free OpenAI API key, it will take a while to index
-your document. This is because the free API key has strict [rate limits](https://platform.openai.com/docs/guides/rate-limits/overview).
-To speed up the indexing process, you can use a paid API key.
+## Почему индексация занимает так много времени?
+Индексация документов - это процесс, при котором AimateDocs обрабатывает весь текст документа,
+для быстрого поиска. Если в ваших документах очень много текстовой информации,
+то индексация может занять некоторое время. Но не волнуйтесь, это происходит только один раз при загрузке документов.
 
 ## What do the numbers mean under each source?
 For a PDF document, you will see a citation number like this: 3-12. 

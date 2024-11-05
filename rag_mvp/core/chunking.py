@@ -28,7 +28,7 @@ def chunk_file(
                 metadata={
                     "page": doc.metadata.get("page", 1),
                     "chunk": i + 1,
-                    "source": f"{doc.metadata.get('page', 1)}-{i + 1}",
+                    "source": f"{file.name}  {doc.metadata.get('page', 1)}-{i + 1}",
                 },
             )
             chunked_docs.append(doc)
