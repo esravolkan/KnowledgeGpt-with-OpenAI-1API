@@ -1,6 +1,5 @@
 import streamlit as st
 
-from rag_mvp.components.faq import faq
 from dotenv import load_dotenv
 from faq import faq
 import os
