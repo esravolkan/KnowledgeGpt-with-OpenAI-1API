@@ -1,9 +1,9 @@
 import streamlit as st
 from streamlit.runtime.caching.hashing import HashFuncsDict
 
-import .parsing as parsing
-import .chunking as chunking
-import .embedding as embedding
+from . import parsing as parsing
+from . import chunking as chunking
+from . import embedding as embedding
 from .parsing import File
 
 
