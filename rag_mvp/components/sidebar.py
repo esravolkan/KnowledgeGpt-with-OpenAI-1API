@@ -1,7 +1,7 @@
 import streamlit as st
 
 from dotenv import load_dotenv
-from faq import faq
+from .faq import faq
 import os
 
 load_dotenv()
