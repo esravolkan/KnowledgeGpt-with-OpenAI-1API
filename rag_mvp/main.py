@@ -6,19 +6,19 @@ import hashlib
 import pickle
 import atexit
 
-from rag_mvp.components.sidebar import sidebar
+from components.sidebar import sidebar
 from ui import (
     wrap_doc_in_html,
     is_query_valid,
     is_file_valid,
     display_file_read_error,
 )
-from rag_mvp.core.caching import bootstrap_caching
-from rag_mvp.core.parsing import read_file
-from rag_mvp.core.chunking import chunk_file
-from rag_mvp.core.embedding import embed_files
-from rag_mvp.core.qa import query_folder
-from rag_mvp.core.utils import get_llm
+from core.caching import bootstrap_caching
+from core.parsing import read_file
+from core.chunking import chunk_file
+from core.embedding import embed_files
+from core.qa import query_folder
+from core.utils import get_llm
 
 load_dotenv()
 

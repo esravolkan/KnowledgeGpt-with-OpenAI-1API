@@ -1,6 +1,6 @@
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from rag_mvp.core.parsing import File
+from parsing import File
 
 
 def chunk_file(

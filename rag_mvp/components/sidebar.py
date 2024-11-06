@@ -2,7 +2,7 @@ import streamlit as st
 
 from rag_mvp.components.faq import faq
 from dotenv import load_dotenv
-from rag_mvp.components.faq import faq
+from faq import faq
 import os
 
 load_dotenv()
