@@ -1,7 +1,7 @@
 from langchain.vectorstores import VectorStore
-from parsing import File
+from .parsing import File
 from langchain_community.vectorstores import FAISS
-from embedder import MultilingualE5
+from .embedder import MultilingualE5
 from langchain.embeddings.base import Embeddings
 from typing import List, Type
 from langchain.docstore.document import Document
