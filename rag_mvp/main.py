@@ -40,7 +40,8 @@ sidebar()
 @atexit.register
 def cleanup():
     import shutil
-    folder = 'usr_temp_data'
+    cur_path = os.path.dirname(os.path.abspath(__file__))
+    folder = os.path.join(cur_path, 'usr_temp_data')
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
         try:
@@ -105,12 +106,16 @@ if not (100 <= chunk_size_input <= 2000 and 0 <= chunk_overlap_input <= 1500):
     st.stop()
 
 def store_indexed_data(file_id, indexed_data):
-    with open(f'usr_temp_data/indexed_data_cache_{file_id}.pkl', 'wb') as f:
+    cur_path = os.path.dirname(os.path.abspath(__file__))
+    folder = os.path.join(cur_path, f'usr_temp_data/indexed_data_cache_{file_id}.pkl')
+    with open(folder, 'wb') as f:
         pickle.dump(indexed_data, f)
 
 def get_indexed_data(file_id):
     try:
-        with open(f'usr_temp_data/indexed_data_cache_{file_id}.pkl', 'rb') as f:
+        cur_path = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(cur_path, f'usr_temp_data/indexed_data_cache_{file_id}.pkl')
+        with open(folder, 'rb') as f:
             return pickle.load(f)
     except FileNotFoundError:
         return None
@@ -137,12 +142,16 @@ if not any(is_file_valid(chunked_file) for chunked_file in chunked_files):
     st.stop()
 
 def store_folder_index(file_id, folder_index):
-    with open(f'usr_temp_data/folder_index_cache_{file_id}.pkl', 'wb') as f:
+    cur_path = os.path.dirname(os.path.abspath(__file__))
+    folder = os.path.join(cur_path, f'usr_temp_data/folder_index_cache_{file_id}.pkl')
+    with open(folder, 'wb') as f:
         pickle.dump(folder_index, f)
 
 def get_folder_index(file_id):
     try:
-        with open(f'usr_temp_data/folder_index_cache_{file_id}.pkl', 'rb') as f:
+        cur_path = os.path.dirname(os.path.abspath(__file__))
+        folder = os.path.join(cur_path, f'usr_temp_data/folder_index_cache_{file_id}.pkl')
+        with open(folder, 'rb') as f:
             return pickle.load(f)
     except FileNotFoundError:
         return None
@@ -199,8 +208,8 @@ if submit:
 @atexit.register
 def cleanup():
     import shutil
-
-    folder = 'usr_temp_data'
+    cur_path = os.path.dirname(os.path.abspath(__file__))
+    folder = os.path.join(cur_path, 'usr_temp_data')
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
         try:
