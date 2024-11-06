@@ -42,7 +42,11 @@ def cleanup():
     import shutil
     cur_path = os.path.dirname(os.path.abspath(__file__))
     folder = os.path.join(cur_path, 'usr_temp_data')
-    for filename in os.listdir(folder):
+    filenames = os.listdir(folder)
+    # if filename is do_not_delete, do not delete it
+    if 'do_not_delete.txt' in filenames:
+        filenames.remove('do_not_delete.txt')
+    for filename in filenames:
         file_path = os.path.join(folder, filename)
         try:
             if os.path.isfile(file_path) or os.path.islink(file_path):
@@ -210,7 +214,10 @@ def cleanup():
     import shutil
     cur_path = os.path.dirname(os.path.abspath(__file__))
     folder = os.path.join(cur_path, 'usr_temp_data')
-    for filename in os.listdir(folder):
+    filenames = os.listdir(folder)
+    if 'do_not_delete.txt' in filenames:
+        filenames.remove('do_not_delete.txt')
+    for filename in filenames:
         file_path = os.path.join(folder, filename)
         try:
             if os.path.isfile(file_path) or os.path.islink(file_path):
