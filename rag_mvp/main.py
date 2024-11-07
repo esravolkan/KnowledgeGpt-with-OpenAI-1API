@@ -37,25 +37,6 @@ bootstrap_caching()
 
 sidebar()
 
-@atexit.register
-def cleanup():
-    import shutil
-    cur_path = os.path.dirname(os.path.abspath(__file__))
-    folder = os.path.join(cur_path, 'usr_temp_data')
-    filenames = os.listdir(folder)
-    # if filename is do_not_delete, do not delete it
-    if 'do_not_delete.txt' in filenames:
-        filenames.remove('do_not_delete.txt')
-    for filename in filenames:
-        file_path = os.path.join(folder, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))
-
 uploaded_files = st.file_uploader(
     "Загрузите pdf, docx, или txt файл",
     type=["pdf", "docx", "txt"],
@@ -109,78 +90,56 @@ if not any(uploaded_file for uploaded_file in uploaded_files):
 if not (100 <= chunk_size_input <= 2000 and 0 <= chunk_overlap_input <= 1500):
     st.stop()
 
-def store_indexed_data(file_id, indexed_data, chunk_size, chunk_overlap):
-    cur_path = os.path.dirname(os.path.abspath(__file__))
-    folder = os.path.join(cur_path, f'usr_temp_data/indexed_data_cache_{file_id}_chunk_size_{chunk_size}_chunk_overlap_{chunk_overlap}.pkl')
-    with open(folder, 'wb') as f:
-        pickle.dump(indexed_data, f)
 
-def get_indexed_data(file_id, chunk_size, chunk_overlap):
-    try:
-        cur_path = os.path.dirname(os.path.abspath(__file__))
-        folder = os.path.join(cur_path, f'usr_temp_data/indexed_data_cache_{file_id}_chunk_size_{chunk_size}_chunk_overlap_{chunk_overlap}.pkl')
-        with open(folder, 'rb') as f:
-            return pickle.load(f)
-    except FileNotFoundError:
-        return None
+@st.cache_data(show_spinner=False)
+def read_files_func(uploaded_files_var):
+    files_local = []
+    for file in uploaded_files_var:
+        try:
+            files_local.append(read_file(file))
+        except Exception as e:
+            display_file_read_error(e, file_name=file.name)
+    return files_local
 
-files = []
-for file in uploaded_files:
-    try:
-        files.append(read_file(file))
-    except Exception as e:
-        display_file_read_error(e, file_name=file.name)
 
-chunked_files = []
-for file in files:
-    cached_data = get_indexed_data(file.id, chunk_size_input, chunk_overlap_input)
-    if cached_data:
-        chunked_files.append(cached_data)
-    else:
-        chunked_file = chunk_file(file, chunk_size=chunk_size_input, chunk_overlap=chunk_overlap_input)
-        store_indexed_data(file.id, chunked_file, chunk_size_input, chunk_overlap_input)
-        chunked_files.append(chunked_file)
+files = read_files_func(uploaded_files)
+
+
+@st.cache_data(show_spinner=False)
+def chunk_files_func(files_var, chunk_size, chunk_overlap):
+    chunked_files_local = []
+    for file in files_var:
+        chunked_file = chunk_file(file, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        chunked_files_local.append(chunked_file)
+    return chunked_files_local
+
+
+chunked_files = chunk_files_func(files, chunk_size=chunk_size_input, chunk_overlap=chunk_overlap_input)
 
 if not any(is_file_valid(chunked_file) for chunked_file in chunked_files):
     st.stop()
 
-def store_folder_index(file_id, folder_index, chunk_size, chunk_overlap):
-    cur_path = os.path.dirname(os.path.abspath(__file__))
-    folder = os.path.join(cur_path, f'usr_temp_data/folder_index_cache_{file_id}_chunk_size_{chunk_size}_chunk_overlap_{chunk_overlap}.pkl')
-    with open(folder, 'wb') as f:
-        pickle.dump(folder_index, f)
 
-def get_folder_index(file_id, chunk_size, chunk_overlap):
-    try:
-        cur_path = os.path.dirname(os.path.abspath(__file__))
-        folder = os.path.join(cur_path, f'usr_temp_data/folder_index_cache_{file_id}_chunk_size_{chunk_size}_chunk_overlap_{chunk_overlap}.pkl')
-        with open(folder, 'rb') as f:
-            return pickle.load(f)
-    except FileNotFoundError:
-        return None
-
-# Compute a combined hash for the uploaded files
-files_hash = hashlib.md5("".join(file.id for file in files).encode()).hexdigest()
-
-# Check if the folder index is already cached
-folder_index = get_folder_index(files_hash, chunk_size_input, chunk_overlap_input)
-
-if not folder_index:
+@st.cache_data(show_spinner=False)
+def create_folder_index(files_var, embedding, vector_store):
     with st.spinner("Индексация документов... Это может занять некоторое время⏳"):
-        folder_index = embed_files(
-            files=chunked_files,
-            embedding=EMBEDDING if model != "debug" else "debug",
-            vector_store=VECTOR_STORE if model != "debug" else "debug",
+        folder_index_local = embed_files(
+            files=files_var,
+            embedding=embedding,
+            vector_store=vector_store,
         )
-        store_folder_index(files_hash, folder_index, chunk_size_input, chunk_overlap_input)
+        return folder_index_local
+
+
+folder_index = create_folder_index(chunked_files, EMBEDDING, VECTOR_STORE)
 
 with st.form(key="qa_form"):
     query = st.text_area("Задайте вопрос по документу")
     submit = st.form_submit_button("Отправить")
 
-if show_full_doc:
-    with st.expander("Document"):
-        st.markdown(f"<p>{wrap_doc_in_html(file.docs)}</p>", unsafe_allow_html=True)
+# if show_full_doc:
+#     with st.expander("Document"):
+#         st.markdown(f"<p>{wrap_doc_in_html(file.docs)}</p>", unsafe_allow_html=True)
 
 if submit:
     if not is_query_valid(query):
@@ -207,21 +166,3 @@ if submit:
             st.markdown(source.page_content)
             st.markdown(source.metadata["source"])
             st.markdown("---")
-
-@atexit.register
-def cleanup():
-    import shutil
-    cur_path = os.path.dirname(os.path.abspath(__file__))
-    folder = os.path.join(cur_path, 'usr_temp_data')
-    filenames = os.listdir(folder)
-    if 'do_not_delete.txt' in filenames:
-        filenames.remove('do_not_delete.txt')
-    for filename in filenames:
-        file_path = os.path.join(folder, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))

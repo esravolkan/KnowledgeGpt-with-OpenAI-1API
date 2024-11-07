@@ -5,8 +5,11 @@ from .embedder import MultilingualE5
 from langchain.embeddings.base import Embeddings
 from typing import List, Type
 from langchain.docstore.document import Document
+import streamlit as st
+from dataclasses import dataclass
 
 
+@dataclass(init=False)
 class FolderIndex:
     """Index for a collection of files (a folder)"""
 
@@ -43,23 +46,21 @@ class FolderIndex:
 
         return cls(files=files, index=index)
 
+@st.cache_resource(show_spinner=False)
+def get_model(embedding: str):
+    return MultilingualE5()
+
 
 def embed_files(
     files: List[File], embedding: str, vector_store: str, **kwargs
 ) -> FolderIndex:
     """Embeds a collection of files and stores them in a FolderIndex."""
 
-    supported_embeddings = {
-        "openai": MultilingualE5,
-    }
     supported_vector_stores: dict[str, Type[VectorStore]] = {
         "faiss": FAISS,
     }
 
-    if embedding in supported_embeddings:
-        _embeddings = supported_embeddings[embedding]()
-    else:
-        raise NotImplementedError(f"Embedding {embedding} not supported.")
+    _embeddings = get_model(embedding)
 
     if vector_store in supported_vector_stores:
         _vector_store = supported_vector_stores[vector_store]

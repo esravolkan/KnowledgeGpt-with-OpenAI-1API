@@ -1,6 +1,7 @@
 from io import BytesIO
 from typing import List, Any, Optional
 import re
+from dataclasses import dataclass
 
 import docx2txt
 from langchain.docstore.document import Document
@@ -11,6 +12,7 @@ from abc import abstractmethod, ABC
 from copy import deepcopy
 
 
+@dataclass(init=False)
 class File(ABC):
     """Represents an uploaded file comprised of Documents"""
 
