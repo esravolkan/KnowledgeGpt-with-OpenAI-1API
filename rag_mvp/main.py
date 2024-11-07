@@ -109,16 +109,16 @@ if not any(uploaded_file for uploaded_file in uploaded_files):
 if not (100 <= chunk_size_input <= 2000 and 0 <= chunk_overlap_input <= 1500):
     st.stop()
 
-def store_indexed_data(file_id, indexed_data):
+def store_indexed_data(file_id, indexed_data, chunk_size, chunk_overlap):
     cur_path = os.path.dirname(os.path.abspath(__file__))
-    folder = os.path.join(cur_path, f'usr_temp_data/indexed_data_cache_{file_id}.pkl')
+    folder = os.path.join(cur_path, f'usr_temp_data/indexed_data_cache_{file_id}_chunk_size_{chunk_size}_chunk_overlap_{chunk_overlap}.pkl')
     with open(folder, 'wb') as f:
         pickle.dump(indexed_data, f)
 
-def get_indexed_data(file_id):
+def get_indexed_data(file_id, chunk_size, chunk_overlap):
     try:
         cur_path = os.path.dirname(os.path.abspath(__file__))
-        folder = os.path.join(cur_path, f'usr_temp_data/indexed_data_cache_{file_id}.pkl')
+        folder = os.path.join(cur_path, f'usr_temp_data/indexed_data_cache_{file_id}_chunk_size_{chunk_size}_chunk_overlap_{chunk_overlap}.pkl')
         with open(folder, 'rb') as f:
             return pickle.load(f)
     except FileNotFoundError:
@@ -133,28 +133,27 @@ for file in uploaded_files:
 
 chunked_files = []
 for file in files:
-    cached_data = get_indexed_data(file.id)
-
+    cached_data = get_indexed_data(file.id, chunk_size_input, chunk_overlap_input)
     if cached_data:
         chunked_files.append(cached_data)
     else:
         chunked_file = chunk_file(file, chunk_size=chunk_size_input, chunk_overlap=chunk_overlap_input)
-        store_indexed_data(file.id, chunked_file)
+        store_indexed_data(file.id, chunked_file, chunk_size_input, chunk_overlap_input)
         chunked_files.append(chunked_file)
 
 if not any(is_file_valid(chunked_file) for chunked_file in chunked_files):
     st.stop()
 
-def store_folder_index(file_id, folder_index):
+def store_folder_index(file_id, folder_index, chunk_size, chunk_overlap):
     cur_path = os.path.dirname(os.path.abspath(__file__))
-    folder = os.path.join(cur_path, f'usr_temp_data/folder_index_cache_{file_id}.pkl')
+    folder = os.path.join(cur_path, f'usr_temp_data/folder_index_cache_{file_id}_chunk_size_{chunk_size}_chunk_overlap_{chunk_overlap}.pkl')
     with open(folder, 'wb') as f:
         pickle.dump(folder_index, f)
 
-def get_folder_index(file_id):
+def get_folder_index(file_id, chunk_size, chunk_overlap):
     try:
         cur_path = os.path.dirname(os.path.abspath(__file__))
-        folder = os.path.join(cur_path, f'usr_temp_data/folder_index_cache_{file_id}.pkl')
+        folder = os.path.join(cur_path, f'usr_temp_data/folder_index_cache_{file_id}_chunk_size_{chunk_size}_chunk_overlap_{chunk_overlap}.pkl')
         with open(folder, 'rb') as f:
             return pickle.load(f)
     except FileNotFoundError:
@@ -164,7 +163,7 @@ def get_folder_index(file_id):
 files_hash = hashlib.md5("".join(file.id for file in files).encode()).hexdigest()
 
 # Check if the folder index is already cached
-folder_index = get_folder_index(files_hash)
+folder_index = get_folder_index(files_hash, chunk_size_input, chunk_overlap_input)
 
 if not folder_index:
     with st.spinner("Индексация документов... Это может занять некоторое время⏳"):
@@ -173,7 +172,7 @@ if not folder_index:
             embedding=EMBEDDING if model != "debug" else "debug",
             vector_store=VECTOR_STORE if model != "debug" else "debug",
         )
-        store_folder_index(files_hash, folder_index)
+        store_folder_index(files_hash, folder_index, chunk_size_input, chunk_overlap_input)
 
 with st.form(key="qa_form"):
     query = st.text_area("Задайте вопрос по документу")
