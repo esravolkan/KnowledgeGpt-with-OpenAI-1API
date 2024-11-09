@@ -140,6 +140,9 @@ with st.form(key="qa_form"):
 # if show_full_doc:
 #     with st.expander("Document"):
 #         st.markdown(f"<p>{wrap_doc_in_html(file.docs)}</p>", unsafe_allow_html=True)
+#
+# def get_query_folder(folder_index, query, return_all_chunks, llm, num_chunks):
+#
 
 if submit:
     if not is_query_valid(query):
