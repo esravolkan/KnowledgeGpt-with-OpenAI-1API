@@ -22,7 +22,8 @@ from core.utils import get_llm
 
 load_dotenv()
 
-EMBEDDING = "openai"
+EMBEDDING = "mistral"
+EMBED_MODEL = "mistral-embed"
 VECTOR_STORE = "faiss"
 MODEL_LIST = ["mistral-large-latest", "mistral-small-latest"]
 
@@ -33,7 +34,7 @@ st.set_page_config(page_title="RAG_MVP", page_icon="🔍", layout="wide")
 st.header("🔍Умный поиск по документации AimateDocs")
 
 # Enable caching for expensive functions
-bootstrap_caching()
+# bootstrap_caching()
 
 sidebar()
 
@@ -53,7 +54,7 @@ if len(uploaded_files) > MAX_LINES:
 model: str = st.selectbox("Модель", options=MODEL_LIST)  # type: ignore
 
 with st.expander("Расширенные опции"):
-    return_all_chunks = st.checkbox("Показвать все текстовые блоки, извлеченные векторным поиском")
+    return_all_chunks = st.checkbox("Показывать все текстовые блоки, извлеченные векторным поиском")
     chunk_size_input = st.number_input(
         "Размер текстового блока (в символах)",
         min_value=100,
@@ -120,13 +121,14 @@ if not any(is_file_valid(chunked_file) for chunked_file in chunked_files):
     st.stop()
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_resource(show_spinner=False)
 def create_folder_index(files_var, embedding, vector_store):
     with st.spinner("Индексация документов... Это может занять некоторое время⏳"):
         folder_index_local = embed_files(
             files=files_var,
             embedding=embedding,
             vector_store=vector_store,
+            model=EMBED_MODEL,
         )
         return folder_index_local
 
