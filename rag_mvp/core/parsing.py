@@ -7,6 +7,7 @@ import docx2txt
 from langchain.docstore.document import Document
 import fitz
 from hashlib import md5
+from xlsx2html import xlsx2html
 
 from abc import abstractmethod, ABC
 from copy import deepcopy
@@ -98,6 +99,17 @@ class TxtFile(File):
         return cls(name=file.name, id=md5(file.read()).hexdigest(), docs=[doc])
 
 
+class XlsmFile(File):
+    @classmethod
+    def from_bytes(cls, file: BytesIO) -> "XlsmFile":
+        html = xlsx2html(file)
+        html.seek(0)
+        file.seek(0)
+        doc = Document(page_content=html.read().strip())
+        doc.metadata["source"] = "p-1"
+        return cls(name=file.name, id=md5(file.read()).hexdigest(), docs=[doc])
+
+
 def read_file(file: BytesIO) -> File:
     """Reads an uploaded file and returns a File object"""
     if file.name.lower().endswith(".docx"):
@@ -106,5 +118,7 @@ def read_file(file: BytesIO) -> File:
         return PdfFile.from_bytes(file)
     elif file.name.lower().endswith(".txt"):
         return TxtFile.from_bytes(file)
+    elif file.name.lower().endswith(".xlsx"):
+        return XlsmFile.from_bytes(file)
     else:
         raise NotImplementedError(f"File type {file.name.split('.')[-1]} not supported")
