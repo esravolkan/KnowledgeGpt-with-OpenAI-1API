@@ -8,6 +8,7 @@ from langchain.docstore.document import Document
 import fitz
 from hashlib import md5
 from xlsx2html import xlsx2html
+from pptx import Presentation
 
 from abc import abstractmethod, ABC
 from copy import deepcopy
@@ -100,6 +101,9 @@ class TxtFile(File):
 
 
 class XlsmFile(File):
+    """
+    Пока может считывать Exel файл с одним листом, иначе считает только первый
+    """
     @classmethod
     def from_bytes(cls, file: BytesIO) -> "XlsmFile":
         html = xlsx2html(file)
@@ -108,6 +112,26 @@ class XlsmFile(File):
         doc = Document(page_content=html.read().strip())
         doc.metadata["source"] = "p-1"
         return cls(name=file.name, id=md5(file.read()).hexdigest(), docs=[doc])
+
+
+class PptxFile(File):
+    @classmethod
+    def from_bytes(cls, file: BytesIO) -> "PptxFile":
+        presentation = Presentation(file)
+        docs = []
+        for slide_number, slide in enumerate(presentation.slides):
+            text = ""
+            for shape in slide.shapes:
+                if hasattr(shape, "text"):
+                    text += shape.text + "\n"
+
+            text = strip_consecutive_newlines(text)
+            doc = Document(page_content=text.strip())
+            doc.metadata["page"] = slide_number + 1
+            doc.metadata["source"] = f"p-{slide_number + 1}"
+            docs.append(doc)
+            file.seek(0)
+        return cls(name=file.name, id=md5(file.read()).hexdigest(), docs=docs)
 
 
 def read_file(file: BytesIO) -> File:
@@ -119,6 +143,8 @@ def read_file(file: BytesIO) -> File:
     elif file.name.lower().endswith(".txt"):
         return TxtFile.from_bytes(file)
     elif file.name.lower().endswith(".xlsx"):
+        return XlsmFile.from_bytes(file)
+    elif file.name.lower().endswith(".pptx"):
         return XlsmFile.from_bytes(file)
     else:
         raise NotImplementedError(f"File type {file.name.split('.')[-1]} not supported")

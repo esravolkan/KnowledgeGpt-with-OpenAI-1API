@@ -156,3 +156,4 @@ webencodings==0.5.1
 yarg==0.1.9
 yarl==1.17.1
 xlsx2html==0.6.1
+python-pptx==1.0.2

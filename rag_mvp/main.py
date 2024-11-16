@@ -40,7 +40,7 @@ sidebar()
 
 uploaded_files = st.file_uploader(
     "Загрузите pdf, docx, или txt файл",
-    type=["pdf", "docx", "txt", "xlsx"],
+    type=["pdf", "docx", "txt", "xlsx", "pptx"],
     help="Сканированные документы пока не поддерживаются.",
     accept_multiple_files=True,
 )
