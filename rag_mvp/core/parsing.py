@@ -9,6 +9,7 @@ import fitz
 from hashlib import md5
 from xlsx2html import xlsx2html
 from pptx import Presentation
+from openpyxl import load_workbook
 
 from abc import abstractmethod, ABC
 from copy import deepcopy
@@ -101,17 +102,22 @@ class TxtFile(File):
 
 
 class XlsmFile(File):
-    """
-    Пока может считывать Exel файл с одним листом, иначе считает только первый
-    """
     @classmethod
     def from_bytes(cls, file: BytesIO) -> "XlsmFile":
-        html = xlsx2html(file)
-        html.seek(0)
+        workbook = load_workbook(file)
+        docs = []
+
+        for i, sheet in enumerate(workbook.sheetnames):
+            html = xlsx2html(file, sheet=sheet) #f'{sheet}.html',
+            html.seek(0)
+            doc = Document(page_content=html.read().strip())
+            html.seek(0)
+            doc.metadata["page"] = i + 1
+            doc.metadata["source"] = f"p-{sheet}"
+            docs.append(doc)
+            #html.seek(0)
         file.seek(0)
-        doc = Document(page_content=html.read().strip())
-        doc.metadata["source"] = "p-1"
-        return cls(name=file.name, id=md5(file.read()).hexdigest(), docs=[doc])
+        return cls(name=file.name, id=md5(file.read()).hexdigest(), docs=docs)
 
 
 class PptxFile(File):
@@ -145,6 +151,6 @@ def read_file(file: BytesIO) -> File:
     elif file.name.lower().endswith(".xlsx"):
         return XlsmFile.from_bytes(file)
     elif file.name.lower().endswith(".pptx"):
-        return XlsmFile.from_bytes(file)
+        return PptxFile.from_bytes(file)
     else:
         raise NotImplementedError(f"File type {file.name.split('.')[-1]} not supported")
